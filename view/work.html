@@ -1,0 +1,129 @@
+
+$(document).ready(function ()
+{
+
+		$("div").hide();
+		$("div").show();
+		startTime();
+		setInterval(function(){ startTime(); }, 1000);
+		keyboard();
+});
+
+/**
+ *	Function that show the system data with current date, month and year also with the current hour
+ * I created an array with days and months
+ *
+ *	@author Baralides Álvarez
+ */
+function startTime()
+{
+	$("#date").show();
+	var dateFormat = "";
+    var date = new Date();
+    var days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+	var months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var seconds = date.getSeconds();
+    minutes = checkTime(minutes);
+    seconds = checkTime(seconds);
+
+    dateFormat = "<p> Today is "+days[date.getDay()]+" "+date.getDate()+nth()+" of "+months[date.getMonth()]+" "+date.getFullYear()+" "+hours+":"+minutes+":"+seconds;
+    $("#date").html(dateFormat)+"</p>";
+}
+
+/**
+ *	This function generates the letters before the day with english system
+ *	@author Baralides Álvarez
+ */
+function nth(d)
+{
+	if(d>3 && d<21)	return 'th';
+	switch (d % 30){
+		case 1:	return 'st';
+		case 2:	return 'nd';
+		case 3:	return 'rd';
+		default:return 'th';
+	}
+}
+
+/**
+ *This function is necessary if you want see the clock in this format: 00:00:00
+ *	@author Baralides Álvarez
+ */
+function checkTime(t)
+{
+    if (t < 10) {t = "0" + t};
+    return t;
+}
+
+/**
+ *	This function create a keyboard with qwery alphabet
+ * I did an array with all qwery alphabet
+ *	@author Baralides Álvarez
+
+ */
+function keyboard()
+{
+	$("#keyboard").show();
+	$("#keyboard").html("<h1>Keyboard</h1>");
+	var keyboardPanel = "";
+	var buttonsKeyboard=["q","w","e","r","t","y","u","i","o","p","Backspace","Caps Lock","a","s","d","f","g","h","j","k","l","ñ","Enter","Shift","z","x","c","v","b","n","m"];
+
+	keyboardPanel += "<textarea id='textarea' readonly/><br/>";
+	for(var i = 0; i < buttonsKeyboard.length; i++)
+	{
+		keyboardPanel += "<button type ='button' id="+buttonsKeyboard[i]+" class='keyboardButtonsClass'>"+buttonsKeyboard[i]+"</button>";
+		if (buttonsKeyboard[i] == "Backspace" || buttonsKeyboard[i] == "Enter")
+		{
+			keyboardPanel += "<br/>";
+		}
+	}
+	$("#keyboard").append(keyboardPanel);
+
+
+	var capitalLetter = false;
+	var capsLock = false;
+
+	/**
+	 *	I implemented this function keyboard features, such as the letters make mayuscula, enter, backspace
+	 * And I added a text area to write text
+	 *	@author Baralides Álvarez
+	 */
+
+	$(".keyboardButtonsClass").click(function()
+	{
+
+		if ($(this).html() == "Backspace")
+		{
+			$("#textarea").html($("#textarea").html().substring(0,($("#textarea").html().length)-1));
+		}
+
+		else if ($(this).html() == "Enter")
+		{
+			$("#textarea").html($("#textarea").html()+"\n");
+		}
+		else if ($(this).html() == "Shift")
+		{
+			if(!capitalLetter)
+			{
+				capitalLetter = true;
+			}
+			else{
+				cappitalLetter = false;
+			}
+		}
+		else if ($(this).html() == "Caps Lock")
+		{
+			$("#keyboard button").each(function()
+			{
+				$(this).html($(this).html().toUpperCase());
+			});
+		}
+		else
+		{
+			$("#textarea").html($("#textarea").html()+$(this).html());
+		}
+
+	});
+}
